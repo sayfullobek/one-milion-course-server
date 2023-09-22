@@ -107,7 +107,7 @@ public class Methods extends Bot {
             for (int j = 0; j < 2; j++) {
                 KeyboardButton keyboardButton = new KeyboardButton();
                 keyboardButton.setText(products.get(tr).getName());
-                keyboardButton.setWebApp(new WebAppInfo("https://google.com"));
+                keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(tr).getId()));
                 keyboardRow.add(keyboardButton);
                 tr++;
             }
@@ -117,7 +117,7 @@ public class Methods extends Bot {
             KeyboardRow keyboardRow = new KeyboardRow();
             KeyboardButton keyboardButton = new KeyboardButton();
             keyboardButton.setText(products.get(products.size() - 1).getName());
-            keyboardButton.setWebApp(new WebAppInfo("https://google.com"));
+            keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(products.size() - 1).getId()));
             KeyboardButton back = new KeyboardButton();
             back.setText("Orqaga");
             keyboardRow.add(keyboardButton);
