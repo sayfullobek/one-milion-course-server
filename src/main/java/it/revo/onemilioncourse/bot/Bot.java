@@ -65,14 +65,12 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                     List<Product> products = productService.getProductByCategoryName(text);
                     methods.getProduct(chatId, "tanlang", products);
                     BotConfig.IS.replace(chatId, "product");
-                } else if (text.equals("Orqaga")) {
-                    if (BotConfig.IS.get(chatId).equals("product")) {
-                        methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
-                        BotConfig.IS.replace(chatId, "category");
-                    } else if (BotConfig.IS.get(chatId).equals("category")) {
-                        methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
-                        BotConfig.IS.remove(chatId);
-                    }
+                } else if (text.equals("Orqaga") && BotConfig.IS.get(chatId).equals("product")) {
+                    methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
+                    BotConfig.IS.replace(chatId, "category");
+                } else if (text.equals("Orqaga") && BotConfig.IS.get(chatId).equals("category")) {
+                    methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
+                    BotConfig.IS.remove(chatId);
                 }
             } else if (message.hasContact()) {
                 Contact contact = message.getContact();
