@@ -16,4 +16,6 @@ public interface ProductServiceImpl {
     ApiResponse<?> editProduct(UUID productId, ProductDto productDto, UUID userId);
 
     List<Product> getProductByCategoryId(Integer categoryId);
+
+    List<Product> search(String search);
 }

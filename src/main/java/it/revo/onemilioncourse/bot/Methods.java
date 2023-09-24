@@ -2,14 +2,12 @@ package it.revo.onemilioncourse.bot;
 
 import it.revo.onemilioncourse.entity.Category;
 import it.revo.onemilioncourse.entity.Product;
-import it.revo.onemilioncourse.repository.ProductRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
 import it.revo.onemilioncourse.service.ProductService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -18,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,6 +197,35 @@ public class Methods extends Bot {
             execute(sendMessage);
         } catch (TelegramApiException e) {
             System.err.println("btn error");
+        }
+    }
+
+    public void sendMsg(String chatId, String text) {
+        try {
+            execute(
+                    SendMessage.builder()
+                            .chatId(chatId)
+                            .text(text)
+                            .build()
+            );
+        } catch (TelegramApiException e) {
+            System.err.println("not btn");
+        }
+    }
+
+    public void sendSearch(String chatId, List<Product> searchs) {
+        for (Product search : searchs) {
+            try {
+                execute(
+                        SendPhoto.builder()
+                                .chatId(chatId)
+                                .caption("Mashulot nomi " + search.getName() + "\nNarxi " + search.getPrice() + "$\nMahsulot haqida " + search.getDescription())
+                                .photo(new InputFile(new File("https://one-milion-course-server-b9404f6d4bf4.herokuapp.com/api/attachment/download?id=" + search.getPhotoId())))
+                                .build()
+                );
+            } catch (TelegramApiException e) {
+                System.err.println("not btn");
+            }
         }
     }
 }

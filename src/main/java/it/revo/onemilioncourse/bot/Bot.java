@@ -58,6 +58,17 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
             if (message.hasText()) {
                 if (text.equals("/start")) {
                     methods.shareContactBtn(chatId, "Assalomu aleykum " + from.getFirstName() + " bizning botimizga hush kelibsiz iltmios kontaktingizni ulashing");
+                } else if (text.equals("Qidirish")) {
+                    methods.sendMsg(chatId, "Qidirayotgan mahsulotingizni kiriting");
+                    BotConfig.IS.put(chatId, "search");
+                } else if (BotConfig.IS.get(chatId).equals("search")) {
+                    List<Product> search = productService.search(text);
+                    if (search.size() == 0) {
+                        methods.sendMsg(chatId, "Qidiruv natijasida mahsulot topilmadi");
+                    } else {
+                        methods.sendSearch(chatId, search);
+                    }
+                    BotConfig.IS.remove(chatId);
                 } else if (text.equals("Bo'limlar")) {
                     methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
                     BotConfig.IS.put(chatId, "category");
