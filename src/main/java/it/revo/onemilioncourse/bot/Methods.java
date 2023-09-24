@@ -17,11 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class Methods extends Bot {
@@ -218,12 +215,36 @@ public class Methods extends Bot {
 
     public void sendSearch(String chatId, List<Product> searchs, AttachmentService attachmentService) {
         for (Product search : searchs) {
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            List<List<InlineKeyboardButton>> inlines = new ArrayList<>();
+            List<InlineKeyboardButton> inlineKeyboardButtons = new ArrayList<>();
+            InlineKeyboardButton like = new InlineKeyboardButton();
+            InlineKeyboardButton basket = new InlineKeyboardButton();
+            InlineKeyboardButton buy = new InlineKeyboardButton();
+            like.setText("Sevimlilarga saqlash");
+            like.setCallbackData("like");
+
+            basket.setText("Savatga saqlash");
+            basket.setCallbackData("basket");
+
+            buy.setText("Sotib olish");
+            buy.setCallbackData("buy");
+
+            inlineKeyboardButtons.add(like);
+            inlineKeyboardButtons.add(basket);
+            inlineKeyboardButtons.add(buy);
+
+            inlines.add(inlineKeyboardButtons);
+
+            inlineKeyboardMarkup.setKeyboard(inlines);
+
             try {
                 execute(
                         SendPhoto.builder()
                                 .chatId(chatId)
                                 .caption("Mashulot nomi " + search.getName() + "\nNarxi " + search.getPrice() + "$\nMahsulot haqida " + search.getDescription())
                                 .photo(new InputFile("https://one-milion-course-server-b9404f6d4bf4.herokuapp.com/api/attachment/download?id=" + search.getPhotoId()))
+                                .replyMarkup(inlineKeyboardMarkup)
                                 .build()
                 );
             } catch (TelegramApiException e) {
