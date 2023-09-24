@@ -130,6 +130,7 @@ public class Methods extends Bot {
             keyboardRow.add(back);
             keyboardRows.add(keyboardRow);
         }
+        System.out.println("");
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
