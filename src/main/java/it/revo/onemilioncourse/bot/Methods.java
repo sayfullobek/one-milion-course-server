@@ -71,14 +71,14 @@ public class Methods extends Bot {
             KeyboardButton keyboardButton = new KeyboardButton();
             keyboardButton.setText(categories.get(categories.size() - 1).getName());
             KeyboardButton back = new KeyboardButton();
-            back.setText("Orqaga");
+            back.setText("Asosiy bo'limga qaytish");
             keyboardRow.add(keyboardButton);
             keyboardRow.add(back);
             keyboardRows.add(keyboardRow);
         } else {
             KeyboardRow keyboardRow = new KeyboardRow();
             KeyboardButton back = new KeyboardButton();
-            back.setText("Orqaga");
+            back.setText("Asosiy bo'limga qaytish");
             keyboardRow.add(back);
             keyboardRows.add(keyboardRow);
         }
@@ -119,14 +119,14 @@ public class Methods extends Bot {
             keyboardButton.setText(products.get(products.size() - 1).getName());
             keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(products.size() - 1).getId()));
             KeyboardButton back = new KeyboardButton();
-            back.setText("Orqaga");
+            back.setText("Bo'limlarga qaytish");
             keyboardRow.add(keyboardButton);
             keyboardRow.add(back);
             keyboardRows.add(keyboardRow);
         } else {
             KeyboardRow keyboardRow = new KeyboardRow();
             KeyboardButton back = new KeyboardButton();
-            back.setText("Orqaga");
+            back.setText("Bo'limlarga qaytish");
             keyboardRow.add(back);
             keyboardRows.add(keyboardRow);
         }
