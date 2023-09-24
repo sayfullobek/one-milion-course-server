@@ -12,6 +12,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findAllByCategoryName(String category_name);
 
-    @Query(value = "select * from products where name like %?1%", nativeQuery = true)
+    @Query(value = "select * from product where name like %?1%", nativeQuery = true)
     List<Product> searchByName(String name);
 }

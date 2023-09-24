@@ -3,6 +3,7 @@ package it.revo.onemilioncourse.bot;
 import it.revo.onemilioncourse.config.BotConfig;
 import it.revo.onemilioncourse.entity.Product;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
+import it.revo.onemilioncourse.service.AttachmentService;
 import it.revo.onemilioncourse.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
     private static final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final CategoryRepository categoryRepository;
     private final ProductService productService;
+    private final AttachmentService attachmentService;
 
     @Override
     public String getBotUsername() {
@@ -48,7 +50,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        Methods methods = new Methods(categoryRepository, productService);
+        Methods methods = new Methods(categoryRepository, productService, attachmentService);
         if (update.hasMessage()) {
             Message message = update.getMessage();
             String chatId = message.getChatId().toString();
@@ -66,7 +68,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                     if (search.size() == 0) {
                         methods.sendMsg(chatId, "Qidiruv natijasida mahsulot topilmadi");
                     } else {
-                        methods.sendSearch(chatId, search);
+                        methods.sendSearch(chatId, search, attachmentService);
                     }
                     BotConfig.IS.remove(chatId);
                 } else if (text.equals("Bo'limlar")) {

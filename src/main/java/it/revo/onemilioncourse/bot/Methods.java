@@ -3,6 +3,7 @@ package it.revo.onemilioncourse.bot;
 import it.revo.onemilioncourse.entity.Category;
 import it.revo.onemilioncourse.entity.Product;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
+import it.revo.onemilioncourse.service.AttachmentService;
 import it.revo.onemilioncourse.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,14 +18,16 @@ import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class Methods extends Bot {
 
-    public Methods(CategoryRepository categoryRepository, ProductService productService) {
-        super(categoryRepository, productService);
+    public Methods(CategoryRepository categoryRepository, ProductService productService, AttachmentService attachmentService) {
+        super(categoryRepository, productService, attachmentService);
     }
 
     public void getCategoryButtons(String chatId, String text, List<Category> categories) {
@@ -213,14 +216,14 @@ public class Methods extends Bot {
         }
     }
 
-    public void sendSearch(String chatId, List<Product> searchs) {
+    public void sendSearch(String chatId, List<Product> searchs, AttachmentService attachmentService) {
         for (Product search : searchs) {
             try {
                 execute(
                         SendPhoto.builder()
                                 .chatId(chatId)
                                 .caption("Mashulot nomi " + search.getName() + "\nNarxi " + search.getPrice() + "$\nMahsulot haqida " + search.getDescription())
-                                .photo(new InputFile(new File("https://one-milion-course-server-b9404f6d4bf4.herokuapp.com/api/attachment/download?id=" + search.getPhotoId())))
+                                .photo(new InputFile("https://one-milion-course-server-b9404f6d4bf4.herokuapp.com/api/attachment/download?id=" + search.getPhotoId()))
                                 .build()
                 );
             } catch (TelegramApiException e) {

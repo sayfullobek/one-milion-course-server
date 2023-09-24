@@ -4,6 +4,7 @@ import it.revo.onemilioncourse.bot.Bot;
 import it.revo.onemilioncourse.bot.Methods;
 import it.revo.onemilioncourse.repository.ProductRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
+import it.revo.onemilioncourse.service.AttachmentService;
 import it.revo.onemilioncourse.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,8 @@ public class OneMilionCourseApplication {
         Methods methods = run.getBean(Methods.class);
         CategoryRepository categoryRepository = run.getBean(CategoryRepository.class);
         ProductService productService = run.getBean(ProductService.class);
+        AttachmentService attachmentService = run.getBean(AttachmentService.class);
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        telegramBotsApi.registerBot(new Bot(categoryRepository, productService));
+        telegramBotsApi.registerBot(new Bot(categoryRepository, productService, attachmentService));
     }
 }
