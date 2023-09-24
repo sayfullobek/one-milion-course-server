@@ -2,7 +2,6 @@ package it.revo.onemilioncourse.bot;
 
 import it.revo.onemilioncourse.config.BotConfig;
 import it.revo.onemilioncourse.entity.Product;
-import it.revo.onemilioncourse.repository.ProductRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
 import it.revo.onemilioncourse.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -61,12 +60,16 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                     methods.shareContactBtn(chatId, "Assalomu aleykum " + from.getFirstName() + " bizning botimizga hush kelibsiz iltmios kontaktingizni ulashing");
                 } else if (text.equals("Bo'limlar")) {
                     methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
-                    BotConfig.IS.put(chatId, "cat");
-                } else if (BotConfig.IS.get(chatId).equals("cat")) {
+                    BotConfig.IS.put(chatId, "product");
+                } else if (BotConfig.IS.get(chatId).equals("product")) {
                     List<Product> products = productService.getProductByCategoryName(text);
                     methods.getProduct(chatId, "tanlang", products);
                 } else if (text.equals("Orqaga")) {
-                    methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
+                    if (BotConfig.IS.get(chatId).equals("product")) {
+                        methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
+                    } else {
+                        methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
+                    }
                 }
             } else if (message.hasContact()) {
                 Contact contact = message.getContact();
