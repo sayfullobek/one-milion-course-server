@@ -71,6 +71,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                         BotConfig.IS.replace(chatId, "category");
                     } else if (BotConfig.IS.get(chatId).equals("category")) {
                         methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
+                        BotConfig.IS.remove(chatId);
                     }
                 }
             } else if (message.hasContact()) {
