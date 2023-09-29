@@ -63,6 +63,9 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 } else if (text.equals("Qidirish")) {
                     methods.sendMsg(chatId, "Qidirayotgan mahsulotingizni kiriting");
                     BotConfig.IS.put(chatId, "search");
+                } else if (text.equals("Bo'limlar")) {
+                    methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
+                    BotConfig.IS.put(chatId, "category");
                 } else if (BotConfig.IS.get(chatId).equals("search")) {
                     List<Product> search = productService.search(text);
                     if (search.size() == 0) {
@@ -71,9 +74,6 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                         methods.sendSearch(chatId, search, attachmentService);
                     }
                     BotConfig.IS.remove(chatId);
-                } else if (text.equals("Bo'limlar")) {
-                    methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
-                    BotConfig.IS.put(chatId, "category");
                 } else if (BotConfig.IS.get(chatId).equals("category") && !text.equals("Asosiy bo'limga qaytish")) {
                     List<Product> products = productService.getProductByCategoryName(text);
                     methods.getProduct(chatId, "tanlang", products);
