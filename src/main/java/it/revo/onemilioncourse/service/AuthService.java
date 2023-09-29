@@ -17,12 +17,9 @@ public class AuthService {
 
     public ApiResponse<?> login(String phoneNumber, String password) {
         User user = userRepository.findUserByPhoneNumber(phoneNumber).orElseThrow(() -> new ResourceNotFoundException(404, "getUser", "phoneNumber", phoneNumber));
-        if (user != null) {
-            if (user.getPassword().equals(password)) {
-                return new ApiResponse<>("Muvaffaqiyatli xisobga kirildi", true, 200, user);
-            }
-            return new ApiResponse<>("Parolingiz xato", false, 403);
+        if (user.getPassword().equals(password)) {
+            return new ApiResponse<>("Muvaffaqiyatli xisobga kirildi", true, 200, user);
         }
-        return new ApiResponse<>("Avval ro'yxatdan o'ting", false, 404);
+        return new ApiResponse<>("Parolingiz xato", false, 403);
     }
 }
