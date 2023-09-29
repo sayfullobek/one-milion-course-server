@@ -2,6 +2,8 @@ package it.revo.onemilioncourse.bot;
 
 import it.revo.onemilioncourse.entity.Category;
 import it.revo.onemilioncourse.entity.Product;
+import it.revo.onemilioncourse.repository.RoleRepository;
+import it.revo.onemilioncourse.repository.UserRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
 import it.revo.onemilioncourse.service.AttachmentService;
 import it.revo.onemilioncourse.service.ProductService;
@@ -22,9 +24,8 @@ import java.util.List;
 
 @Service
 public class Methods extends Bot {
-
-    public Methods(CategoryRepository categoryRepository, ProductService productService, AttachmentService attachmentService) {
-        super(categoryRepository, productService, attachmentService);
+    public Methods(CategoryRepository categoryRepository, ProductService productService, AttachmentService attachmentService, UserRepository userRepository, RoleRepository roleRepository) {
+        super(categoryRepository, productService, attachmentService, userRepository, roleRepository);
     }
 
     public void getCategoryButtons(String chatId, String text, List<Category> categories) {
@@ -106,7 +107,7 @@ public class Methods extends Bot {
             for (int j = 0; j < 2; j++) {
                 KeyboardButton keyboardButton = new KeyboardButton();
                 keyboardButton.setText(products.get(tr).getName());
-                keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(tr).getId()));
+                keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(tr).getId() + "/" + chatId));
                 keyboardRow.add(keyboardButton);
                 tr++;
             }
@@ -116,7 +117,7 @@ public class Methods extends Bot {
             KeyboardRow keyboardRow = new KeyboardRow();
             KeyboardButton keyboardButton = new KeyboardButton();
             keyboardButton.setText(products.get(products.size() - 1).getName());
-            keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(products.size() - 1).getId()));
+            keyboardButton.setWebApp(new WebAppInfo("https://main--fabulous-mousse-ed6ff2.netlify.app/product/" + products.get(products.size() - 1).getId() + "/" + chatId));
             KeyboardButton back = new KeyboardButton();
             back.setText("Bo'limlarga qaytish");
             keyboardRow.add(keyboardButton);

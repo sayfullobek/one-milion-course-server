@@ -13,6 +13,9 @@ import java.util.List;
 @Entity(name = "users")
 @Builder
 public class User extends AbsEntity {
+
+    private String chatId;
+
     @Column(nullable = false)
     private String firstName; //ismi
 
@@ -37,6 +40,20 @@ public class User extends AbsEntity {
 
     private boolean accountNonLocked = true; //ushbu account ochiq yoki yo'qligi
     private boolean accountNonExpired = true; //ushbu accountning muddati tugaganmi yoki yo'qmi
+
+
+    public User(String chatId, String firstName, String lastName, String phoneNumber, List<Role> roles, String referralCode, boolean enabled, boolean credentialsNonExpired, boolean accountNonLocked, boolean accountNonExpired) {
+        this.chatId = chatId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.roles = roles;
+        this.referralCode = referralCode;
+        this.enabled = enabled;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.accountNonExpired = accountNonExpired;
+    }
 
     public User(String firstName, String lastName, String phoneNumber, List<Role> roles, String referralCode, boolean enabled, boolean credentialsNonExpired, boolean accountNonLocked, boolean accountNonExpired) {
         this.firstName = firstName;

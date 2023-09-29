@@ -2,6 +2,9 @@ package it.revo.onemilioncourse.bot;
 
 import it.revo.onemilioncourse.config.BotConfig;
 import it.revo.onemilioncourse.entity.Product;
+import it.revo.onemilioncourse.exception.ResourceNotFoundException;
+import it.revo.onemilioncourse.repository.RoleRepository;
+import it.revo.onemilioncourse.repository.UserRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
 import it.revo.onemilioncourse.service.AttachmentService;
 import it.revo.onemilioncourse.service.ProductService;
@@ -18,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,6 +31,8 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
     private final CategoryRepository categoryRepository;
     private final ProductService productService;
     private final AttachmentService attachmentService;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public String getBotUsername() {
@@ -50,7 +56,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        Methods methods = new Methods(categoryRepository, productService, attachmentService);
+        Methods methods = new Methods(categoryRepository, productService, attachmentService, userRepository, roleRepository);
         if (update.hasMessage()) {
             Message message = update.getMessage();
             String chatId = message.getChatId().toString();
@@ -88,6 +94,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
             } else if (message.hasContact()) {
                 Contact contact = message.getContact();
                 methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
+                userRepository.save(new it.revo.onemilioncourse.entity.User(chatId, contact.getFirstName(), contact.getLastName(), contact.getPhoneNumber(), Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException(404, "getRole", "roleId", 2))), "a", true, true, true, true));
             }
         }
     }
