@@ -20,4 +20,8 @@ public interface ProductServiceImpl {
     List<Product> search(String search);
 
     ApiResponse<?> likeAndBasketProducts(Long chatId, UUID productId, String status);
+
+    ApiResponse<?> getLike(Long chatId, UUID productId);
+
+    ApiResponse<?> getBasket(Long chatId, UUID productId);
 }

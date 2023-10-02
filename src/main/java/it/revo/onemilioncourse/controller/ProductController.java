@@ -62,11 +62,27 @@ public class ProductController implements ProductControllerImpl {
 
     @Override
     @PutMapping("/like-basket/{productId}")
-    public HttpEntity<?> likeAndBasketProduct(@RequestParam(name = "chatId", required = false)
-                                                      Long chatId, @PathVariable UUID productId,
+    public HttpEntity<?> likeAndBasketProduct(@RequestParam(name = "chatId", required = false) Long chatId,
+                                              @PathVariable UUID productId,
                                               @RequestParam(name = "status", required = false) String status) {
         ApiResponse<?> apiResponse = productService.likeAndBasketProducts(chatId, productId, status);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+
+    @Override
+    @GetMapping("/basket/{productId}")
+    public HttpEntity<?> getBasket(@RequestParam(name = "chatId", required = false) Long chatId,
+                                   @PathVariable UUID productId) {
+        ApiResponse<?> basket = productService.getBasket(chatId, productId);
+        return ResponseEntity.status(basket.getStatus()).body(basket);
+    }
+
+    @Override
+    @GetMapping("/like/{productId}")
+    public HttpEntity<?> getLike(@RequestParam(name = "chatId", required = false) Long chatId,
+                                 @PathVariable UUID productId) {
+        ApiResponse<?> like = productService.getLike(chatId, productId);
+        return ResponseEntity.status(like.getStatus()).body(like);
     }
 
 //    @Override

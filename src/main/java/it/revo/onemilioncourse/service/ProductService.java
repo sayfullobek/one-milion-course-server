@@ -72,7 +72,7 @@ public class ProductService implements ProductServiceImpl {
         if (status.equals("like")) {
             Set<Product> likeProducts = user.getLikeProducts();
             for (Product likeProduct : likeProducts) {
-                if (likeProduct.getId() == productId) {
+                if (likeProduct.getId().equals(productId)) {
                     user.getLikeProducts().remove(likeProduct);
                     tr++;
                 }
@@ -83,7 +83,7 @@ public class ProductService implements ProductServiceImpl {
         } else {
             List<Product> basketProducts = user.getBaskets();
             for (Product basketProduct : basketProducts) {
-                if (basketProduct.getId() == productId) {
+                if (basketProduct.getId().equals(productId)) {
                     user.getBaskets().remove(basketProduct);
                     tr++;
                 }
@@ -94,6 +94,30 @@ public class ProductService implements ProductServiceImpl {
         }
         userRepository.save(user);
         return new ApiResponse<>(status.equals("like") ? tr == 0 ? "Sevimlilarga qo'shildi" : "Sevimlilardan olib tashlandi" : tr == 0 ? "Savatchaga saqlandi" : "Savatchadan olib tashlandi", true, 200);
+    }
+
+    @Override
+    public ApiResponse<?> getLike(Long chatId, UUID productId) {
+        User user = userRepository.findUserByChatId(chatId);
+        int tr = 0;
+        for (Product likeProduct : user.getLikeProducts()) {
+            if (likeProduct.getId().equals(productId)) {
+                tr++;
+            }
+        }
+        return new ApiResponse<>(tr == 0 ? "not like" : "like", tr != 0, 200);
+    }
+
+    @Override
+    public ApiResponse<?> getBasket(Long chatId, UUID productId) {
+        User user = userRepository.findUserByChatId(chatId);
+        int tr = 0;
+        for (Product basketProduct : user.getBaskets()) {
+            if (basketProduct.getId().equals(productId)) {
+                tr++;
+            }
+        }
+        return new ApiResponse<>(tr == 0 ? "not basket" : "basket", tr != 0, 200);
     }
 
     public List<Product> getProductByCategoryName(String name) {
