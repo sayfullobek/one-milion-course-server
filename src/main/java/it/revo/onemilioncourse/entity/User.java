@@ -54,16 +54,4 @@ public class User extends AbsEntity {
         this.accountNonLocked = accountNonLocked;
         this.accountNonExpired = accountNonExpired;
     }
-
-    public User(String firstName, String lastName, String phoneNumber, List<Role> roles, String referralCode, boolean enabled, boolean credentialsNonExpired, boolean accountNonLocked, boolean accountNonExpired) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.roles = roles;
-        this.referralCode = referralCode;
-        this.enabled = enabled;
-        this.credentialsNonExpired = credentialsNonExpired;
-        this.accountNonLocked = accountNonLocked;
-        this.accountNonExpired = accountNonExpired;
-    }
 }
