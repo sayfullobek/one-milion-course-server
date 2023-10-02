@@ -94,7 +94,7 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
             } else if (message.hasContact()) {
                 Contact contact = message.getContact();
                 methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
-                userRepository.save(new it.revo.onemilioncourse.entity.User(chatId, contact.getFirstName(), contact.getLastName(), contact.getPhoneNumber(), Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException(404, "getRole", "roleId", 2))), "a", true, true, true, true));
+                userRepository.save(new it.revo.onemilioncourse.entity.User(Long.parseLong(chatId), contact.getFirstName(), contact.getLastName(), contact.getPhoneNumber(), Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException(404, "getRole", "roleId", 2))), "a", true, true, true, true));
             }
         }
     }
