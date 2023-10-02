@@ -70,7 +70,7 @@ public class ProductService implements ProductServiceImpl {
         User user = userRepository.findUserByChatId(chatId);
         int tr = 0;
         if (status.equals("like")) {
-            Set<Product> likeProducts = user.getLikeProducts();
+            List<Product> likeProducts = user.getLikeProducts();
             for (Product likeProduct : likeProducts) {
                 if (likeProduct.getId().equals(productId)) {
                     user.getLikeProducts().remove(likeProduct);
