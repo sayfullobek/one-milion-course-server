@@ -60,9 +60,20 @@ public class ProductController implements ProductControllerImpl {
         return ResponseEntity.ok(productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(404, "getProduct", "productId", id)));
     }
 
+    @Override
+    @PutMapping("/like-basket/{productId}")
+    public HttpEntity<?> likeAndBasketProduct(@RequestParam(name = "chatId", required = false)
+                                                      Long chatId, @PathVariable UUID productId,
+                                              @RequestParam(name = "status", required = false) String status) {
+        ApiResponse<?> apiResponse = productService.likeAndBasketProducts(chatId, productId, status);
+        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+
 //    @Override
 //    @GetMapping("/{categoryId}")
 //    public HttpEntity<?> getProductByCategoryId(@PathVariable Integer categoryId) {
 //        return null;
 //    }
+
+
 }

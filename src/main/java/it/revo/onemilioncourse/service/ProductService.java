@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -62,6 +63,37 @@ public class ProductService implements ProductServiceImpl {
     @Override
     public List<Product> search(String search) {
         return productRepository.searchByName(search);
+    }
+
+    @Override
+    public ApiResponse<?> likeAndBasketProducts(Long chatId, UUID productId, String status) {
+        User user = userRepository.findUserByChatId(chatId);
+        int tr = 0;
+        if (status.equals("like")) {
+            Set<Product> likeProducts = user.getLikeProducts();
+            for (Product likeProduct : likeProducts) {
+                if (likeProduct.getId() == productId) {
+                    user.getLikeProducts().remove(likeProduct);
+                    tr++;
+                }
+            }
+            if (tr == 0) {
+                user.getLikeProducts().add(productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(404, "getProduct", "productId", productId)));
+            }
+        } else {
+            List<Product> basketProducts = user.getBaskets();
+            for (Product basketProduct : basketProducts) {
+                if (basketProduct.getId() == productId) {
+                    user.getBaskets().remove(basketProduct);
+                    tr++;
+                }
+            }
+            if (tr == 0) {
+                user.getBaskets().add(productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(404, "getProduct", "productId", productId)));
+            }
+        }
+        userRepository.save(user);
+        return new ApiResponse<>(status.equals("like") ? tr == 0 ? "Sevimlilarga qo'shildi" : "Sevimlilardan olib tashlandi" : tr == 0 ? "Savatchaga saqlandi" : "Savatchadan olib tashlandi", true, 200);
     }
 
     public List<Product> getProductByCategoryName(String name) {

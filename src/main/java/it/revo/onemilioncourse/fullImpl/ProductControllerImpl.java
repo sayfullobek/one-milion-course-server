@@ -17,5 +17,7 @@ public interface ProductControllerImpl {
 
     HttpEntity<?> getOne(UUID productId);
 
+    HttpEntity<?> likeAndBasketProduct(Long chatId, UUID productId, String status);
+
 //    HttpEntity<?> getProductByCategoryId(Integer categoryId);
 }

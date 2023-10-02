@@ -18,4 +18,6 @@ public interface ProductServiceImpl {
     List<Product> getProductByCategoryId(Integer categoryId);
 
     List<Product> search(String search);
+
+    ApiResponse<?> likeAndBasketProducts(Long chatId, UUID productId, String status);
 }

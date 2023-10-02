@@ -2,6 +2,7 @@ package it.revo.onemilioncourse.repository;
 
 import it.revo.onemilioncourse.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
@@ -12,12 +13,8 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findUserByPhoneNumber(String username);
 
-    Optional<User> findUserByReferralCode(String referralCode);
+    User findUserByChatId(Long chatId);
 
-    List<User> findUsersByRolesId(Integer role_id);
-
-    boolean existsUserByPhoneNumber(String phoneNumber);
-
-    boolean existsUserByReferralCode(String referralCode);
-
+    @Query(value = "select * from users where likeProducts=?1", nativeQuery = true)
+    boolean getProductLike(UUID id);
 }

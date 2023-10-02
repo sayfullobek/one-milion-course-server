@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -34,13 +35,21 @@ public class User extends AbsEntity {
     @Column(nullable = false, unique = true)
     private String referralCode; //referral code
 
+    @ManyToMany
+    private Set<Product> likeProducts;
+
+    @ManyToMany
+    private List<Product> baskets;
+
+    @ManyToMany
+    private List<Product> buys;
+
     private boolean enabled = true; //ushbu account ishlayaptimi yoki yo'q
 
     private boolean credentialsNonExpired = true; //ushbu accountning ma'lumotlarining muddati tugaganmi yoki yo'qmi
 
     private boolean accountNonLocked = true; //ushbu account ochiq yoki yo'qligi
     private boolean accountNonExpired = true; //ushbu accountning muddati tugaganmi yoki yo'qmi
-
 
     public User(Long chatId, String firstName, String lastName, String phoneNumber, List<Role> roles, String referralCode, boolean enabled, boolean credentialsNonExpired, boolean accountNonLocked, boolean accountNonExpired) {
         this.chatId = chatId;
@@ -67,5 +76,4 @@ public class User extends AbsEntity {
         this.accountNonLocked = accountNonLocked;
         this.accountNonExpired = accountNonExpired;
     }
-
 }
