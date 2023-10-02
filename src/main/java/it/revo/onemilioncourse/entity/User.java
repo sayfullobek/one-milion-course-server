@@ -36,7 +36,7 @@ public class User extends AbsEntity {
     private String referralCode; //referral code
 
     @ManyToMany
-    private Set<Product> likeProducts;
+    private List<Product> likeProducts;
 
     @ManyToMany
     private List<Product> baskets;

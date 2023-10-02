@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -69,6 +70,20 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 } else if (text.equals("Qidirish")) {
                     methods.sendMsg(chatId, "Qidirayotgan mahsulotingizni kiriting");
                     BotConfig.IS.put(chatId, "search");
+                } else if (text.equals("Savatcha")) {
+                    List<Product> baskets = userRepository.findUserByChatId(Long.parseLong(chatId)).getBaskets();
+                    if (baskets.size() == 0) {
+                        methods.sendMsg(chatId, "Savatcha bo'sh...");
+                    } else {
+                        methods.sendSearch(chatId, baskets, attachmentService);
+                    }
+                } else if (text.equals("Sevimlilar")) {
+                    List<Product> likeProducts = userRepository.findUserByChatId(Long.parseLong(chatId)).getLikeProducts();
+                    if (likeProducts.size() == 0) {
+                        methods.sendMsg(chatId, "Sevimlilar bo'sh...");
+                    } else {
+                        methods.sendSearch(chatId, likeProducts, attachmentService);
+                    }
                 } else if (text.equals("Bo'limlar")) {
                     methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
                     BotConfig.IS.put(chatId, "category");
