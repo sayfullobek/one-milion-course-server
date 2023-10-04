@@ -86,6 +86,19 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 } else if (text.equals("Bo'limlar")) {
                     methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
                     BotConfig.IS.put(chatId, "category");
+                } else if (BotConfig.IS.get(chatId).equals("confirm") && text.equals("Xa")) {
+                    ApiResponse<?> apiResponse = productService.buyProduct(Long.parseLong(chatId), BotConfig.productId.get(chatId), BotConfig.SIZE.get(chatId), BotConfig.LOCATIONS.get(chatId).getLatitude(), BotConfig.LOCATIONS.get(chatId).getLongitude());
+                    methods.getKeyboardBtnList(chatId, apiResponse.getMessage(), BotConfig.getStartBtn);
+                    BotConfig.IS.remove(chatId);
+                    BotConfig.productId.remove(chatId);
+                    BotConfig.SIZE.remove(chatId);
+                    BotConfig.LOCATIONS.remove(chatId);
+                } else if (BotConfig.IS.get(chatId).equals("confirm") && text.equals("Yo'q")) {
+                    methods.getKeyboardBtnList(chatId, "Buyurtma bekor qilindi", BotConfig.getStartBtn);
+                    BotConfig.IS.remove(chatId);
+                    BotConfig.productId.remove(chatId);
+                    BotConfig.SIZE.remove(chatId);
+                    BotConfig.LOCATIONS.remove(chatId);
                 } else if (BotConfig.IS.get(chatId).equals("product-size")) {
                     try {
                         int size = Integer.parseInt(text);
@@ -142,19 +155,6 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 BotConfig.productId.put(chatId, UUID.fromString(productId));
                 methods.sendMsg(chatId, "Ushbu mahsulotdan nechta sotib olmoqchisiz?");
                 BotConfig.IS.put(chatId, "product-size");
-            } else if (BotConfig.IS.get(chatId).equals("confirm") && data.equals("Xa")) {
-                ApiResponse<?> apiResponse = productService.buyProduct(Long.parseLong(chatId), BotConfig.productId.get(chatId), BotConfig.SIZE.get(chatId), BotConfig.LOCATIONS.get(chatId).getLatitude(), BotConfig.LOCATIONS.get(chatId).getLongitude());
-                methods.getKeyboardBtnList(chatId, apiResponse.getMessage(), BotConfig.getStartBtn);
-                BotConfig.IS.remove(chatId);
-                BotConfig.productId.remove(chatId);
-                BotConfig.SIZE.remove(chatId);
-                BotConfig.LOCATIONS.remove(chatId);
-            } else if (BotConfig.IS.get(chatId).equals("confirm") && data.equals("Yo'q")) {
-                methods.getKeyboardBtnList(chatId, "Buyurtma bekor qilindi", BotConfig.getStartBtn);
-                BotConfig.IS.remove(chatId);
-                BotConfig.productId.remove(chatId);
-                BotConfig.SIZE.remove(chatId);
-                BotConfig.LOCATIONS.remove(chatId);
             }
         }
     }
