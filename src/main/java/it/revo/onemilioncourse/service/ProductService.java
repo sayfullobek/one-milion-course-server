@@ -1,18 +1,19 @@
 package it.revo.onemilioncourse.service;
 
-import it.revo.onemilioncourse.entity.Category;
-import it.revo.onemilioncourse.entity.Product;
-import it.revo.onemilioncourse.entity.User;
+import it.revo.onemilioncourse.entity.*;
 import it.revo.onemilioncourse.exception.ResourceNotFoundException;
 import it.revo.onemilioncourse.fullImpl.ProductServiceImpl;
 import it.revo.onemilioncourse.payload.ApiResponse;
 import it.revo.onemilioncourse.payload.ProductDto;
+import it.revo.onemilioncourse.repository.BuyProductRepository;
+import it.revo.onemilioncourse.repository.LocationRepository;
 import it.revo.onemilioncourse.repository.ProductRepository;
 import it.revo.onemilioncourse.repository.UserRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public class ProductService implements ProductServiceImpl {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final BuyProductRepository buyProductRepository;
+    private final LocationRepository locationRepository;
 
     @Override
     public ApiResponse<?> addProduct(ProductDto productDto, UUID userId) {
@@ -122,5 +125,25 @@ public class ProductService implements ProductServiceImpl {
 
     public List<Product> getProductByCategoryName(String name) {
         return productRepository.findAllByCategoryName(name);
+    }
+
+    public ApiResponse<?> buyProduct(Long chatId, UUID productId, int size, String latitude, String longitude) {
+        User user = userRepository.findUserByChatId(chatId);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(404, "getProduct", "productId", productId));
+        Location location = Location.builder()
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+        Location loc = locationRepository.save(location);
+        BuyProduct buyProduct = new BuyProduct(
+                Collections.singletonList(product),
+                size,
+                (product.getPrice() * size),
+                Collections.singletonList(loc)
+        );
+        BuyProduct save = buyProductRepository.save(buyProduct);
+        user.getBuys().add(save);
+        userRepository.save(user);
+        return new ApiResponse<>("Muvaffaqiyatli sotib olindi", true, 200);
     }
 }

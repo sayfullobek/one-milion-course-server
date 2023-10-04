@@ -3,6 +3,7 @@ package it.revo.onemilioncourse.bot;
 import it.revo.onemilioncourse.config.BotConfig;
 import it.revo.onemilioncourse.entity.Product;
 import it.revo.onemilioncourse.exception.ResourceNotFoundException;
+import it.revo.onemilioncourse.payload.ApiResponse;
 import it.revo.onemilioncourse.repository.RoleRepository;
 import it.revo.onemilioncourse.repository.UserRepository;
 import it.revo.onemilioncourse.repository.rest.CategoryRepository;
@@ -85,6 +86,15 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 } else if (text.equals("Bo'limlar")) {
                     methods.getCategory(chatId, "tanlang", categoryRepository.findAll());
                     BotConfig.IS.put(chatId, "category");
+                } else if (BotConfig.IS.get(chatId).equals("product-size")) {
+                    try {
+                        int size = Integer.parseInt(text);
+                        BotConfig.SIZE.put(chatId, size);
+                        methods.sendMsg(chatId, "Manzilni tanlang");
+                        BotConfig.IS.replace(chatId, "address");
+                    } catch (NumberFormatException e) {
+                        methods.sendMsg(chatId, "Raqam kiriting");
+                    }
                 } else if (BotConfig.IS.get(chatId).equals("search")) {
                     List<Product> search = productService.search(text);
                     if (search.size() == 0) {
@@ -108,6 +118,13 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 Contact contact = message.getContact();
                 methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
                 userRepository.save(new it.revo.onemilioncourse.entity.User(Long.parseLong(chatId), contact.getFirstName(), contact.getLastName(), contact.getPhoneNumber(), Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException(404, "getRole", "roleId", 2))), "a", true, true, true, true));
+            } else if (message.hasLocation()) {
+                Location location = message.getLocation();
+                if (BotConfig.IS.get(chatId).equals("address")) {
+                    BotConfig.LOCATIONS.put(chatId, new it.revo.onemilioncourse.entity.Location(location.getLongitude().toString(), location.getLatitude().toString()));
+                    BotConfig.IS.replace(chatId, "confirm");
+                    methods.getKeyboardBtnList(chatId, "Rozimisiz?", BotConfig.CONFIRM);
+                }
             }
         } else if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -122,7 +139,22 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 productService.likeAndBasketProducts(Long.parseLong(chatId), UUID.fromString(productId), "basket");
                 methods.sendMsg(chatId, "Savatga muvaffaqiyatli saqlandi...");
             } else if (data.startsWith("buy")) {
-                System.out.println("salom");
+                BotConfig.productId.put(chatId, UUID.fromString(productId));
+                methods.sendMsg(chatId, "Ushbu mahsulotdan nechta sotib olmoqchisiz?");
+                BotConfig.IS.put(chatId, "product-size");
+            } else if (BotConfig.IS.get(chatId).equals("confirm") && data.equals("Xa")) {
+                ApiResponse<?> apiResponse = productService.buyProduct(Long.parseLong(chatId), BotConfig.productId.get(chatId), BotConfig.SIZE.get(chatId), BotConfig.LOCATIONS.get(chatId).getLatitude(), BotConfig.LOCATIONS.get(chatId).getLongitude());
+                methods.getKeyboardBtnList(chatId, apiResponse.getMessage(), BotConfig.getStartBtn);
+                BotConfig.IS.remove(chatId);
+                BotConfig.productId.remove(chatId);
+                BotConfig.SIZE.remove(chatId);
+                BotConfig.LOCATIONS.remove(chatId);
+            } else if (BotConfig.IS.get(chatId).equals("confirm") && data.equals("Yo'q")) {
+                methods.getKeyboardBtnList(chatId, "Buyurtma bekor qilindi", BotConfig.getStartBtn);
+                BotConfig.IS.remove(chatId);
+                BotConfig.productId.remove(chatId);
+                BotConfig.SIZE.remove(chatId);
+                BotConfig.LOCATIONS.remove(chatId);
             }
         }
     }

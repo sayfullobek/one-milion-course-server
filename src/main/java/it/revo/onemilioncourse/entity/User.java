@@ -42,7 +42,7 @@ public class User extends AbsEntity {
     private List<Product> baskets;
 
     @ManyToMany
-    private List<Product> buys;
+    private List<BuyProduct> buys;
 
     private boolean enabled = true; //ushbu account ishlayaptimi yoki yo'q
 
