@@ -245,6 +245,7 @@ public class Methods extends Bot {
                                 .chatId(chatId)
                                 .caption("Mashulot nomi " + search.getName() + "\nNarxi " + search.getPrice() + "$\nMahsulot haqida " + search.getDescription())
                                 .photo(new InputFile("https://one-milion-course-server-b9404f6d4bf4.herokuapp.com/api/attachment/download?id=" + search.getPhotoId()))
+//                                .photo(new InputFile("https://images.pexels.com/photos/59821/lamb-spring-nature-animal-59821.jpeg?cs=srgb&dl=pexels-pixabay-59821.jpg&fm=jpg"))
                                 .replyMarkup(inlineKeyboardMarkup)
                                 .build()
                 );
