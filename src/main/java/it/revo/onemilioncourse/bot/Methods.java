@@ -223,13 +223,13 @@ public class Methods extends Bot {
             InlineKeyboardButton basket = new InlineKeyboardButton();
             InlineKeyboardButton buy = new InlineKeyboardButton();
             like.setText("Sevimlilarga saqlash");
-            like.setCallbackData("like");
+            like.setCallbackData("like:" + search.getId());
 
             basket.setText("Savatga saqlash");
-            basket.setCallbackData("basket");
+            basket.setCallbackData("basket:" + search.getId());
 
             buy.setText("Sotib olish");
-            buy.setCallbackData("buy");
+            buy.setCallbackData("buy:" + search.getId());
 
             inlineKeyboardButtons.add(like);
             inlineKeyboardButtons.add(basket);

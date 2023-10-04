@@ -14,16 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.objects.Contact;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -110,6 +108,19 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
                 Contact contact = message.getContact();
                 methods.getKeyboardBtnList(chatId, "Tanlang", BotConfig.getStartBtn);
                 userRepository.save(new it.revo.onemilioncourse.entity.User(Long.parseLong(chatId), contact.getFirstName(), contact.getLastName(), contact.getPhoneNumber(), Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException(404, "getRole", "roleId", 2))), "a", true, true, true, true));
+            }
+        } else if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            String data = callbackQuery.getData();
+            String chatId = callbackQuery.getFrom().getId().toString();
+            String[] split = data.split(":");
+            String productId = split[1];
+            if (data.startsWith("like")) {
+                productService.likeAndBasketProducts(Long.parseLong(chatId), UUID.fromString(productId), "like");
+            } else if (data.startsWith("basket")) {
+                productService.likeAndBasketProducts(Long.parseLong(chatId), UUID.fromString(productId), "basket");
+            } else if (data.startsWith("buy")) {
+                System.out.println("salom");
             }
         }
     }
