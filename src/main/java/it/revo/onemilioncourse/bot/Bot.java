@@ -117,8 +117,10 @@ public class Bot extends TelegramWebhookBot implements LongPollingBot {
             String productId = split[1];
             if (data.startsWith("like")) {
                 productService.likeAndBasketProducts(Long.parseLong(chatId), UUID.fromString(productId), "like");
+                methods.sendMsg(chatId, "Sevimlilarga muvaffaqiyatli saqlandi...");
             } else if (data.startsWith("basket")) {
                 productService.likeAndBasketProducts(Long.parseLong(chatId), UUID.fromString(productId), "basket");
+                methods.sendMsg(chatId, "Savatga muvaffaqiyatli saqlandi...");
             } else if (data.startsWith("buy")) {
                 System.out.println("salom");
             }
